@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Button } from 'antd';
 import useFetchData from '../hooks/useFetchData';
 import { getUserList } from '../constants/Apis';
 
@@ -11,7 +12,7 @@ const LoadMore = () => {
     <>
       <h1>Basic</h1>
       <p>This is the about page</p>
-      <button onClick={() => setPage(2)}>加载第二页</button>
+      <Button type="primary" onClick={() => setPage(2)}>加载第二页</Button>
     </>
   )
 };

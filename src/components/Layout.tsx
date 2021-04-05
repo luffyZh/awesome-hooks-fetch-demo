@@ -1,40 +1,62 @@
-import React, { ReactNode } from 'react'
-import Link from 'next/link'
-import Head from 'next/head'
+import React, { ReactNode } from 'react';
+import { Layout, Menu } from 'antd';
+import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
+
+const { Header, Content, Footer, Sider } = Layout;
 
 type Props = {
   children?: ReactNode
   title?: string
 }
 
-const Layout = ({ children }: Props) => (
-  <div>
-    <Head>
-      <meta charSet="utf-8" />
-      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      <link rel='shortcut icon' href='/images/favicon.ico' type='image/ico'/>
-    </Head>
-    <header>
-      <nav>
-        <Link href="/">
-          <a>Home</a>
-        </Link>{' '}
-        |{' '}
-        <Link href="/about">
-          <a>About</a>
-        </Link>{' '}
-        |{' '}
-        <Link href="/load-more">
-          <a>Load More</a>
-        </Link>
-      </nav>
-    </header>
-    {children}
-    <footer>
-      <hr />
-      <span>I'm here to stay (Footer)</span>
-    </footer>
-  </div>
+const CustomLayout = ({ children, title }: Props) => (
+  <Layout style={{ position: 'fixed', top: 0, bottom: 0, left: 0, right: 0 }}>
+    <Sider
+      theme="light"
+      breakpoint="lg"
+      collapsedWidth="0"
+      onBreakpoint={broken => {
+        console.log(broken);
+      }}
+      onCollapse={(collapsed, type) => {
+        console.log(collapsed, type);
+      }}
+      style={{ width: 260, minWidth: 260 }}
+    >
+      <style jsx>{`
+        .logo {
+          height: 64px;
+          background: #1890ff;
+        }
+      `}</style>
+      <div className="logo"></div>
+      <Menu mode="inline" defaultSelectedKeys={['home']}>
+        <Menu.Item key="home" icon={<UserOutlined />}>
+          Home
+        </Menu.Item>
+        <Menu.Item key="user_list" icon={<VideoCameraOutlined />}>
+          User List
+        </Menu.Item>
+        <Menu.Item key="page_list" icon={<UploadOutlined />}>
+          Page List
+        </Menu.Item>
+        <Menu.Item key="load_more" icon={<UserOutlined />}>
+          Load More
+        </Menu.Item>
+      </Menu>
+    </Sider>
+    <Layout>
+      <Header style={{ paddingLeft: 20, background: '#fff', color: '#222' }}>
+        <h2>{title}</h2>
+      </Header>
+      <Content style={{ margin: '24px 16px 0', overflow: 'auto' }}>
+        <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
+          {children}
+        </div>
+      </Content>
+      <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+    </Layout>
+  </Layout>
 )
 
-export default Layout
+export default CustomLayout;

@@ -8,6 +8,8 @@
     "type-check": "tsc"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.6.2",
+    "antd": "^4.15.0",
     "isomorphic-unfetch": "^3.1.0",
     "next": "latest",
     "query-string": "^7.0.0",

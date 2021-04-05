@@ -1,0 +1,1 @@
+export const getUserList: string = '/api/user/list';

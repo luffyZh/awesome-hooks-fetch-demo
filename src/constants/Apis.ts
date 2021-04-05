@@ -1,1 +1,1 @@
-export const getUserList: string = '/api/user/list';
+export const getUserList: string = '/api/users/list';

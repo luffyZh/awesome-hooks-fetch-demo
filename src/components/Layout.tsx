@@ -24,10 +24,9 @@ const Layout = ({ children }: Props) => (
           <a>About</a>
         </Link>{' '}
         |{' '}
-        <Link href="/users">
-          <a>Users List</a>
-        </Link>{' '}
-        | <a href="/api/users">Users API</a>
+        <Link href="/load-more">
+          <a>Load More</a>
+        </Link>
       </nav>
     </header>
     {children}

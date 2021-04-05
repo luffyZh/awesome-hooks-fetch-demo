@@ -9,6 +9,9 @@ const mockList: IUserStruct[] = Array.from(
   x => ({ id: x, name: `luffyZh${x}`, age: Math.ceil(Math.random() * 100) })
 );
 
-export function generateUserList(page: number = 1): IUserStruct[] {
+export function generateUserList(page: number | undefined): IUserStruct[] {
+  if (!page) {
+    return mockList;
+  }
   return mockList.slice((10 * (page - 1)), (10 * page));
 }

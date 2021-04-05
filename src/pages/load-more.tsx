@@ -1,16 +1,20 @@
-import Link from 'next/link'
-import Layout from '../components/Layout'
+import { useState } from 'react';
+import useFetchData from '../hooks/useFetchData';
+import { getUserList } from '../constants/Apis';
 
-const LoadMore = () => (
-  <Layout>
-    <h1>Basic</h1>
-    <p>This is the about page</p>
-    <p>
-      <Link href="/">
-        <a>Go home</a>
-      </Link>
-    </p>
-  </Layout>
-)
+const LoadMore = () => {
+  const [page, setPage] = useState(1);
+  const options = { query: { page } };
+  const { loading, data, error } = useFetchData(getUserList, options);
+  console.log(loading, data, error);
+  return (
+    <>
+      <h1>Basic</h1>
+      <p>This is the about page</p>
+      <button onClick={() => setPage(2)}>加载第二页</button>
+    </>
+  )
+};
 
-export default LoadMore
+export default LoadMore;
+

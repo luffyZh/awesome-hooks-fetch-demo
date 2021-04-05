@@ -1,16 +1,40 @@
-import Link from 'next/link'
-import Layout from '../components/Layout'
+import { Table } from 'antd';
+import useFetchData from '../hooks/useFetchData';
+import { getUserList } from '../constants/Apis';
 
-const Basic = () => (
-  <Layout>
-    <h1>Basic</h1>
-    <p>This is the about page</p>
-    <p>
-      <Link href="/">
-        <a>Go home</a>
-      </Link>
-    </p>
-  </Layout>
-)
+const columns = [
+  {
+    title: 'ID',
+    dataIndex: 'id',
+    key: 'id',
+  },
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    key: 'name',
+  },
+  {
+    title: 'Age',
+    dataIndex: 'age',
+    key: 'age',
+  },
+];
 
-export default Basic
+const Basic = () => {
+  const { loading, data } = useFetchData(getUserList);
+  return (
+    <>
+      <Table
+        rowKey={record => record.id}
+        pagination={false}
+        loading={loading}
+        columns={columns}
+        dataSource={data?.list || []}
+        scroll={{ y: 600 }}
+      />
+      {data?.total && <h3 style={{ textAlign: 'center', marginTop: 20 }}>共{data.total}条</h3>}
+    </>
+  )
+}
+
+export default Basic;

@@ -1,41 +1,19 @@
-import { Table } from 'antd';
-import useFetchData from '../hooks/useFetchData';
-import { getUserList } from '../constants/Apis';
+import ReactMarkdown from 'react-markdown';
 
-const columns = [
-  {
-    title: 'ID',
-    dataIndex: 'id',
-    key: 'id',
-  },
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-  },
-];
+const MDStr: string = `
+## Awesome Hooks Fetch Data 👏
+A React Hooks HOC For Awesome Fetch Data. 
+
+### Todo
+
+ - 目前是基于业务使用，可以把内部的 fetch 换成其他请求库，比如： Axios。
+ - 后续可以只封装逻辑层，业务层可以像 swr 一样，封装成参数 fetcher。#
+`;
 
 const IndexPage = () => {
-  const { loading, data } = useFetchData(getUserList);
   return (
-    <>
-      <Table
-        pagination={false}
-        loading={loading}
-        columns={columns}
-        dataSource={data?.list || []}
-        scroll={{ y: 600 }}
-      />
-      {data?.total && <h3 style={{ textAlign: 'center', marginTop: 20 }}>共{data.total}条</h3>}
-    </>
+    <ReactMarkdown children={MDStr} />
   )
 }
 
 export default IndexPage;
-
-IndexPage.title = 'aaa';

@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+import Router, { useRouter } from 'next/router';
 import { Layout, Menu } from 'antd';
 import { UploadOutlined, UserOutlined, VideoCameraOutlined, PullRequestOutlined } from '@ant-design/icons';
 
@@ -25,25 +26,40 @@ const CustomLayout = ({ children, title }: Props) => (
     >
       <style jsx>{`
         .logo {
+          display: flex;
+          justify-content: center;
+          align-items: center;
           height: 64px;
           background: #1890ff;
         }
+
+        .logo a {
+          color: #fff;
+          font-size: 18px;
+          font-weight: 600;
+        }
       `}</style>
-      <div className="logo"></div>
-      <Menu mode="inline" defaultSelectedKeys={['home']}>
-        <Menu.Item key="home" icon={<UserOutlined />}>
+      <div className="logo"><a href="https://github.com/luffyZh" target="_blank">Go to luffyZh</a></div>
+      <Menu
+        mode="inline"
+        defaultSelectedKeys={[useRouter().pathname || '/']}
+        onClick={(e: any) => {
+          Router.push(e.key);
+        }}
+      >
+        <Menu.Item key="/" icon={<UserOutlined />}>
           Home
         </Menu.Item>
-        <Menu.Item key="basic_list" icon={<VideoCameraOutlined />}>
+        <Menu.Item key="/basic" icon={<VideoCameraOutlined />}>
           Basic List
         </Menu.Item>
-        <Menu.Item key="abort_list" icon={<PullRequestOutlined />}>
+        <Menu.Item key="/abort" icon={<PullRequestOutlined />}>
           Abort List
         </Menu.Item>
-        <Menu.Item key="page_list" icon={<UploadOutlined />}>
+        <Menu.Item key="/page" icon={<UploadOutlined />}>
           Page List
         </Menu.Item>
-        <Menu.Item key="load_more" icon={<UserOutlined />}>
+        <Menu.Item key="/load-more" icon={<UserOutlined />}>
           Load More
         </Menu.Item>
       </Menu>
@@ -52,12 +68,12 @@ const CustomLayout = ({ children, title }: Props) => (
       <Header style={{ paddingLeft: 20, background: '#fff', color: '#222' }}>
         <h2>{title}</h2>
       </Header>
-      <Content style={{ margin: '24px 16px 0', overflow: 'auto' }}>
+      <Content style={{ margin: '24px 16px 0', overflow: 'auto', background: '#fff' }}>
         <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
           {children}
         </div>
       </Content>
-      <Footer style={{ textAlign: 'center' }}>Use Fetch Data</Footer>
+      <Footer style={{ textAlign: 'center' }}>🌞 Use Fetch Data 🪐</Footer>
     </Layout>
   </Layout>
 )

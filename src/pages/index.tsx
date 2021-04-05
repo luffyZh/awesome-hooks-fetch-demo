@@ -1,6 +1,40 @@
-const IndexPage = () => (
-  <a href="https://www.yuque.com/docs/share/1bd9f57f-eaee-4973-b935-45c0b855148b#%20%E3%80%8A%E7%AC%94%E8%AF%95%E9%A2%98%E3%80%8B" target="_blank">面试题地址</a>
-);
+import { Table } from 'antd';
+import useFetchData from '../hooks/useFetchData';
+import { getUserList } from '../constants/Apis';
+
+const columns = [
+  {
+    title: 'ID',
+    dataIndex: 'id',
+    key: 'id',
+  },
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    key: 'name',
+  },
+  {
+    title: 'Age',
+    dataIndex: 'age',
+    key: 'age',
+  },
+];
+
+const IndexPage = () => {
+  const { loading, data } = useFetchData(getUserList);
+  return (
+    <>
+      <Table
+        pagination={false}
+        loading={loading}
+        columns={columns}
+        dataSource={data?.list || []}
+        scroll={{ y: 600 }}
+      />
+      {data?.total && <h3 style={{ textAlign: 'center', marginTop: 20 }}>共{data.total}条</h3>}
+    </>
+  )
+}
 
 export default IndexPage;
 

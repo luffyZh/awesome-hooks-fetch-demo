@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Layout, Menu } from 'antd';
-import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import { UploadOutlined, UserOutlined, VideoCameraOutlined, PullRequestOutlined } from '@ant-design/icons';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -34,8 +34,11 @@ const CustomLayout = ({ children, title }: Props) => (
         <Menu.Item key="home" icon={<UserOutlined />}>
           Home
         </Menu.Item>
-        <Menu.Item key="user_list" icon={<VideoCameraOutlined />}>
-          User List
+        <Menu.Item key="basic_list" icon={<VideoCameraOutlined />}>
+          Basic List
+        </Menu.Item>
+        <Menu.Item key="abort_list" icon={<PullRequestOutlined />}>
+          Abort List
         </Menu.Item>
         <Menu.Item key="page_list" icon={<UploadOutlined />}>
           Page List
@@ -54,7 +57,7 @@ const CustomLayout = ({ children, title }: Props) => (
           {children}
         </div>
       </Content>
-      <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+      <Footer style={{ textAlign: 'center' }}>Use Fetch Data</Footer>
     </Layout>
   </Layout>
 )

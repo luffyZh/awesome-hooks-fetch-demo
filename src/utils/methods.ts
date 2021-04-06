@@ -8,3 +8,7 @@ export const filterObject = (o: Record<string, string>, filter: Function) => {
   });
   return res;
 };
+
+export async function sleep(time: number) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}

@@ -1,4 +1,4 @@
-import { IUserStruct } from '../interfaces'
+import { IUserStruct, IUserListResStruct } from '../interfaces'
 
 const ARRAY_LEN: number = 1000;
 let arrIndex: number[] = [];
@@ -9,9 +9,16 @@ const mockList: IUserStruct[] = Array.from(
   x => ({ id: x, name: `luffyZh${x}`, age: Math.ceil(Math.random() * 100) })
 );
 
-export function generateUserList(page: number | undefined): IUserStruct[] {
+export function generateUserList(page: number | undefined, pageSize?: number): IUserListResStruct {
+  const total = mockList.length;
   if (!page) {
-    return mockList;
+    return {
+      list: mockList,
+      total
+    };
   }
-  return mockList.slice((10 * (page - 1)), (10 * page));
+  return {
+    list: mockList.slice(((pageSize || 10) * (page - 1)), ((pageSize || 10) * page)),
+    total
+  };
 }

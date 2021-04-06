@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import Router, { useRouter } from 'next/router';
 import { Layout, Menu } from 'antd';
-import { UploadOutlined, UserOutlined, VideoCameraOutlined, PullRequestOutlined } from '@ant-design/icons';
+import { UploadOutlined, UserOutlined, VideoCameraOutlined, PullRequestOutlined, PushpinOutlined } from '@ant-design/icons';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -48,19 +48,22 @@ const CustomLayout = ({ children, title }: Props) => (
         }}
       >
         <Menu.Item key="/" icon={<UserOutlined />}>
-          Home
+          首页简介
         </Menu.Item>
         <Menu.Item key="/basic" icon={<VideoCameraOutlined />}>
-          Basic List
-        </Menu.Item>
-        <Menu.Item key="/abort" icon={<PullRequestOutlined />}>
-          Abort List
+          基础列表
         </Menu.Item>
         <Menu.Item key="/page" icon={<UploadOutlined />}>
-          Page List
+          分页列表
         </Menu.Item>
         <Menu.Item key="/load-more" icon={<UserOutlined />}>
-          Load More
+          加载更多
+        </Menu.Item>
+        <Menu.Item key="/abort" icon={<PullRequestOutlined />}>
+          中断请求
+        </Menu.Item>
+        <Menu.Item key="/fallback" icon={<PushpinOutlined />}>
+          异常回退
         </Menu.Item>
       </Menu>
     </Sider>

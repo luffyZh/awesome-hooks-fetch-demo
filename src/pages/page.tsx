@@ -1,24 +1,49 @@
-/*
- * @Author: your name
- * @Date: 2021-04-05 14:25:44
- * @LastEditTime: 2021-04-05 14:26:19
- * @LastEditors: your name
- * @Description: In User Settings Edit
- * @FilePath: /awesome-hooks-fetch-demo/src/pages/Page.tsx
- */
-import Link from 'next/link'
-import Layout from '../components/Layout'
+import { useState } from 'react';
+import { Table } from 'antd';
+import useFetchData from '../hooks/useFetchData';
+import { getUserList } from '../constants/Apis';
 
-const Page = () => (
-  <Layout>
-    <h1>Basic</h1>
-    <p>This is the about page</p>
-    <p>
-      <Link href="/">
-        <a>Go home</a>
-      </Link>
-    </p>
-  </Layout>
-)
+const columns = [
+  {
+    title: 'ID',
+    dataIndex: 'id',
+    key: 'id',
+  },
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    key: 'name',
+  },
+  {
+    title: 'Age',
+    dataIndex: 'age',
+    key: 'age',
+  },
+];
 
-export default Page
+const Page = () => {
+  const [page, setPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number | undefined>(10);
+  const { loading, data } = useFetchData(getUserList, { query: { page, pageSize } });
+  const onPageNumChange = (page: number, pageSize?: number) => {
+    setPage(page);
+    setPageSize(pageSize);
+  }
+  return (
+    <Table
+      rowKey={record => record.id}
+      loading={loading}
+      columns={columns}
+      dataSource={data?.list || []}
+      pagination={{
+        pageSize,
+        pageSizeOptions: ['10', '20', '30', '40', '50'],
+        onChange: onPageNumChange,
+        total: data?.total || 0
+      }}
+      scroll={{ y: 640 }}
+    />
+  )
+}
+
+export default Page;

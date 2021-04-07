@@ -1,6 +1,6 @@
-
 import fetch from 'isomorphic-unfetch';
 import qs from 'query-string';
+import { message } from 'antd';
 import { filterObject } from './methods';
 
 enum EHttpMethods {
@@ -9,6 +9,25 @@ enum EHttpMethods {
   put = 'PUT',
   patch = 'PATCH',
   delete = 'DELETE'
+}
+
+type ICustomRequestError = {
+  status: number;
+  statusText: string;
+  url: string;
+}
+
+function dealErrToast(err: Error & ICustomRequestError) {
+  switch(err.status) {
+    case 408: {
+      (typeof window !== 'undefined') && message.error(err.statusText);
+      break;
+    }
+    default: {
+      console.log(err);
+      break;
+    }
+  }
 }
 
 /**
@@ -27,11 +46,12 @@ export interface IResponseData {
 }
 
 export interface IRequestOptions {
-  method?: EHttpMethods; 
+  headers?: IHeaderConfig;
+  signal?: any;
+  method?: EHttpMethods;
   query?: Record<string, any>;
   data?: Record<string, any>;
   body?: string;
-  headers?: IHeaderConfig;
   timeout?: number;
   credentials?: 'include' | 'same-origin';
   mode?: 'cors' | 'same-origin';
@@ -50,7 +70,7 @@ interface IHttpInterface {
 const CAN_SEND_METHOD = ['POST', 'PUT', 'PATCH', 'DELETE'];
 
 class Http implements IHttpInterface {
-  public request<IResponseData>(url: string, options?: IRequestOptions): Promise<IResponseData> {
+  public request<IResponseData>(url: string, options: IRequestOptions, abortControler?: AbortController): Promise<IResponseData> {
     const opts: IRequestOptions = Object.assign({
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -62,7 +82,7 @@ class Http implements IHttpInterface {
       cache: 'no-cache'
     }, options);
 
-    console.log('Request Opts: ', opts);
+    abortControler && (opts.signal = abortControler.signal);
 
     if (opts && opts.query) {
       url += `${url.includes('?') ? '&' : '?'}${qs.stringify(
@@ -74,17 +94,27 @@ class Http implements IHttpInterface {
 
     if (canSend && opts.data) {
       opts.body = qs.stringify(filterObject(opts.data, Boolean));
+      opts.headers && Reflect.set(opts.headers, 'Content-Type', 'application/json');
     }
 
-    return fetch(url, opts)
-      .then<IResponseData>((response) => {
-        return response.json();
-      })
-      .catch((err) => {
-        console.log(err);
-        return err;
+    console.log('Request Opts: ', opts);
+
+    return Promise.race([
+      fetch(url, opts),
+      new Promise<any>((_, reject) => {
+        setTimeout(() => {
+          abortControler && abortControler.abort();
+          return reject({ status: 408, statusText: '请求超时，请稍后重试', url })
+        }, opts.timeout);
+      }),
+    ]).then<IResponseData>(res => res.json())
+      .catch(e => {
+        dealErrToast(e);
+        return e;
       });
   }
 }
 
-export default (new Http()).request;
+const { request } = new Http();
+
+export { request as default };

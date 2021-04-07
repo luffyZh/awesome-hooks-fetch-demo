@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import request, { IRequestOptions, IResponseData } from '../utils/request';
 
 interface IFetchResData {
@@ -8,7 +8,7 @@ interface IFetchResData {
   fallback?: any;
 }
 
-function useFetchData(url: string, options?: IRequestOptions, useFallback?: boolean): IFetchResData {
+function useFetchData(url: string, options: IRequestOptions = {}, useFallback?: boolean): IFetchResData {
   // 如果是一个通用的 fetchData，那么使用any是没办法的，如果只是针对list，any可以替换为 IUserListResStruct
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -18,17 +18,23 @@ function useFetchData(url: string, options?: IRequestOptions, useFallback?: bool
    * 针对分页类列表的优化
    */
   const [fallback, setFallback] = useState<any>(null);
+  /**
+   * 超时或者页面销毁/路由跳转，取消请求
+   */
+  const abortControlerRef = useRef<AbortController>();
 
   function destory() {
     setData(null);
     setLoading(false);
     setError(null);
     setFallback(null);
+    abortControlerRef.current && abortControlerRef.current.abort();
   }
 
   useEffect(() => {
     setLoading(true);
-    request(url, options).then(res => {
+    abortControlerRef.current = new AbortController();
+    request(url, options || {}, abortControlerRef.current).then(res => {
       const { success, message, data } = res as IResponseData;
       if (!success) {
         console.log('Error Msg: ', message);

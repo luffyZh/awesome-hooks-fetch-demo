@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-04-04 22:09:20
+ * @LastEditTime: 2021-04-07 11:39:31
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: /awesome-hooks-fetch-demo/src/components/Layout.tsx
+ */
 import React, { ReactNode } from 'react';
 import Router, { useRouter } from 'next/router';
 import { Layout, Menu } from 'antd';
@@ -16,12 +24,6 @@ const CustomLayout = ({ children, title }: Props) => (
       theme="light"
       breakpoint="lg"
       collapsedWidth="0"
-      onBreakpoint={broken => {
-        console.log(broken);
-      }}
-      onCollapse={(collapsed, type) => {
-        console.log(collapsed, type);
-      }}
       style={{ width: 260, minWidth: 260 }}
     >
       <style jsx>{`

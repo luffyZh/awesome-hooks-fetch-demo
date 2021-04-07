@@ -17,9 +17,10 @@ type ICustomRequestError = {
   url: string;
 }
 
-function dealErrToast(err: Error & ICustomRequestError) {
+function dealErrToast(err: Error & ICustomRequestError, abortController?: AbortController) {
   switch(err.status) {
     case 408: {
+      abortController && abortController.abort();
       (typeof window !== 'undefined') && message.error(err.statusText);
       break;
     }
@@ -70,7 +71,7 @@ interface IHttpInterface {
 const CAN_SEND_METHOD = ['POST', 'PUT', 'PATCH', 'DELETE'];
 
 class Http implements IHttpInterface {
-  public request<IResponseData>(url: string, options?: IRequestOptions, abortControler?: AbortController): Promise<IResponseData> {
+  public request<IResponseData>(url: string, options?: IRequestOptions, abortController?: AbortController): Promise<IResponseData> {
     const opts: IRequestOptions = Object.assign({
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -82,7 +83,7 @@ class Http implements IHttpInterface {
       cache: 'no-cache'
     }, options);
 
-    abortControler && (opts.signal = abortControler.signal);
+    abortController && (opts.signal = abortController.signal);
 
     if (opts && opts.query) {
       url += `${url.includes('?') ? '&' : '?'}${qs.stringify(
@@ -103,13 +104,12 @@ class Http implements IHttpInterface {
       fetch(url, opts),
       new Promise<any>((_, reject) => {
         setTimeout(() => {
-          abortControler && abortControler.abort();
           return reject({ status: 408, statusText: '请求超时，请稍后重试', url })
         }, opts.timeout);
       }),
     ]).then<IResponseData>(res => res.json())
       .catch(e => {
-        dealErrToast(e);
+        dealErrToast(e, abortController);
         return e;
       });
   }

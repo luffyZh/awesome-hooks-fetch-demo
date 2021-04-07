@@ -20,20 +20,20 @@ function useFetchData(url: string, options?: IRequestOptions): IFetchResData {
   /**
    * 超时或者页面销毁/路由跳转，取消请求
    */
-  const abortControlerRef = useRef<AbortController>();
+  const abortControllerRef = useRef<AbortController>();
 
   function destory() {
     setData(null);
     setLoading(false);
     setError(null);
     setFallback(null);
-    abortControlerRef.current && abortControlerRef.current.abort();
+    abortControllerRef.current && abortControllerRef.current.abort();
   }
 
   useEffect(() => {
     setLoading(true);
-    abortControlerRef.current = new AbortController();
-    request(url, options || {}, abortControlerRef.current).then(res => {
+    abortControllerRef.current = new AbortController();
+    request(url, options || {}, abortControllerRef.current).then(res => {
       const { success, message, data } = res as IResponseData;
       if (!success) {
         console.log('Error Msg: ', message);

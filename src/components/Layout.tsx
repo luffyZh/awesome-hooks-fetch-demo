@@ -1,15 +1,15 @@
 /*
  * @Author: your name
  * @Date: 2021-04-04 22:09:20
- * @LastEditTime: 2021-04-07 11:39:31
- * @LastEditors: your name
+ * @LastEditTime: 2021-04-07 20:39:02
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /awesome-hooks-fetch-demo/src/components/Layout.tsx
  */
 import React, { ReactNode } from 'react';
 import Router, { useRouter } from 'next/router';
 import { Layout, Menu } from 'antd';
-import { UploadOutlined, UserOutlined, VideoCameraOutlined, PullRequestOutlined, PushpinOutlined } from '@ant-design/icons';
+import { UploadOutlined, UserOutlined, VideoCameraOutlined, PullRequestOutlined } from '@ant-design/icons';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -63,9 +63,6 @@ const CustomLayout = ({ children, title }: Props) => (
         </Menu.Item>
         <Menu.Item key="/abort" icon={<PullRequestOutlined />}>
           中断请求
-        </Menu.Item>
-        <Menu.Item key="/fallback" icon={<PushpinOutlined />}>
-          异常回退
         </Menu.Item>
       </Menu>
     </Sider>

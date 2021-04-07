@@ -70,7 +70,7 @@ interface IHttpInterface {
 const CAN_SEND_METHOD = ['POST', 'PUT', 'PATCH', 'DELETE'];
 
 class Http implements IHttpInterface {
-  public request<IResponseData>(url: string, options: IRequestOptions, abortControler?: AbortController): Promise<IResponseData> {
+  public request<IResponseData>(url: string, options?: IRequestOptions, abortControler?: AbortController): Promise<IResponseData> {
     const opts: IRequestOptions = Object.assign({
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',

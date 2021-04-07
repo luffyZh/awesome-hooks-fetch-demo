@@ -36,6 +36,7 @@ const Page = () => {
       columns={columns}
       dataSource={data?.list || []}
       pagination={{
+        current: page,
         pageSize,
         pageSizeOptions: ['10', '20', '30', '40', '50'],
         onChange: onPageNumChange,

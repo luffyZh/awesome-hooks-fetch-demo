@@ -1,15 +1,18 @@
+/**
+ * /hooks/useFetchData.tsx
+ */
 import { useState, useEffect, useRef } from 'react';
 import request, { IRequestOptions, IResponseData } from '../utils/request';
 
-interface IFetchResData {
-  data: any;
+interface IFetchResData<T> {
+  data: T | undefined;
   loading: boolean;
   error: any;
 }
 
-function useFetchData(url: string, options?: IRequestOptions): IFetchResData {
+function useFetchData<T = any>(url: string, options?: IRequestOptions): IFetchResData<T> {
   // 如果是一个通用的 fetchData，那么使用any是没办法的，如果只是针对list，any可以替换为 IUserListResStruct
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<T>();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<any>(null);
   /**
@@ -18,7 +21,7 @@ function useFetchData(url: string, options?: IRequestOptions): IFetchResData {
   const abortControllerRef = useRef<AbortController>();
 
   function destory() {
-    setData(null);
+    setData(undefined);
     setLoading(false);
     setError(null);
     abortControllerRef.current && abortControllerRef.current.abort();

@@ -3,6 +3,7 @@ import { Table, Button } from 'antd';
 import useFetchData from '../hooks/useFetchData';
 import { getLimitUserList } from '../constants/Apis';
 import { IUserStruct } from '../interfaces';
+import { IUserListResData } from './api/users/list';
 
 const BASIC_SIZE = 10;
 
@@ -30,7 +31,7 @@ const LoadMore = () => {
   const [list, setList] = useState<IUserStruct[]>([]);
   const [noMore, setNoMore] = useState<boolean>(false);
   const options = { query: { page, pageSize } };
-  const { loading, data } = useFetchData(getLimitUserList, options);
+  const { loading, data } = useFetchData<IUserListResData>(getLimitUserList, options);
   useEffect(() => {
     // 如果 data 改变了并且返回了，就更新 list
     data && setList(list => {

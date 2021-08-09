@@ -1,6 +1,12 @@
+import { IUserStruct } from './../../../interfaces/user';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { generateUserList } from '../../../utils/user-data'
 import { sleep } from '../../../utils/methods';
+
+export interface IUserListResData {
+  list: IUserStruct[];
+  total: number
+}
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { page, pageSize } = req.query;

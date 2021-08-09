@@ -17,6 +17,11 @@ type ICustomRequestError = {
   url: string;
 }
 
+/**
+ * 错误处理
+ * @param err 
+ * @param abortController 
+ */
 function dealErrToast(err: Error & ICustomRequestError, abortController?: AbortController) {
   switch(err.status) {
     case 408: {
@@ -70,7 +75,7 @@ export interface IRequestOptions {
   * @param options request options
   */
 interface IHttpInterface {
-  request<T>(url: string, options?: IRequestOptions): Promise<T>;
+  request<T = IResponseData>(url: string, options?: IRequestOptions): Promise<T>;
 }
 
 const CAN_SEND_METHOD = ['POST', 'PUT', 'PATCH', 'DELETE'];
@@ -115,7 +120,7 @@ class Http implements IHttpInterface {
           }, opts.timeout);
         }),
       ]);
-      const result: T = await res.json();
+      const result = await res.json();
       return result;
     } catch (e) {
       dealErrToast(e, abortController);

@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react';
 import { Table } from 'antd';
 import useFetchData from '../hooks/useFetchData';
-import { getUserList } from '../constants/Apis';
+import { postUserList } from '../constants/Apis';
+import { EHttpMethods } from '../utils/request';
 
 const columns = [
   {
@@ -25,9 +26,12 @@ const Page = () => {
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number | undefined>(10);
 
-  const options = useMemo(() => ({ query: { page, pageSize } }), [page, pageSize]);
+  const options = useMemo(() => ({
+    method: EHttpMethods.POST,
+    data: { page, pageSize }
+  }), [page, pageSize]);
 
-  const { loading, data } = useFetchData(getUserList, options);
+  const { loading, data } = useFetchData(postUserList, options);
   const onPageNumChange = (page: number, pageSize?: number) => {
     setPage(page);
     setPageSize(pageSize);

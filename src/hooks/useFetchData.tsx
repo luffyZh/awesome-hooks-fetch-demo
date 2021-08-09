@@ -13,11 +13,6 @@ function useFetchData(url: string, options?: IRequestOptions): IFetchResData {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<any>(null);
   /**
-   * 如果请求失败了，自动 fallback 上一次成功的结果，避免出现空列表
-   * 针对分页类列表的优化
-   */
-  const [fallback, setFallback] = useState<any>(null);
-  /**
    * 超时或者页面销毁/路由跳转，取消请求
    */
   const abortControllerRef = useRef<AbortController>();
@@ -26,7 +21,6 @@ function useFetchData(url: string, options?: IRequestOptions): IFetchResData {
     setData(null);
     setLoading(false);
     setError(null);
-    setFallback(null);
     abortControllerRef.current && abortControllerRef.current.abort();
   }
 
@@ -34,8 +28,8 @@ function useFetchData(url: string, options?: IRequestOptions): IFetchResData {
     setLoading(true);
     abortControllerRef.current = new AbortController();
     request(url, options || {}, abortControllerRef.current).then(res => {
-      const { success, message, data } = res as IResponseData;
-      if (!success) {
+      const { code, message, data } = res as IResponseData;
+      if (code !== 0) {
         console.log('Error Msg: ', message);
         throw new Error(message);
       }

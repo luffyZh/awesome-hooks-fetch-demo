@@ -9,7 +9,7 @@
 import React, { ReactNode } from 'react';
 import Router, { useRouter } from 'next/router';
 import { Layout, Menu } from 'antd';
-import { UploadOutlined, UserOutlined, VideoCameraOutlined, PullRequestOutlined } from '@ant-design/icons';
+import { UploadOutlined, UserOutlined, VideoCameraOutlined, PullRequestOutlined, FileOutlined } from '@ant-design/icons';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -63,6 +63,9 @@ const CustomLayout = ({ children, title }: Props) => (
         </Menu.Item>
         <Menu.Item key="/abort" icon={<PullRequestOutlined />}>
           中断请求
+        </Menu.Item>
+        <Menu.Item key="/post" icon={<FileOutlined />}>
+          POST请求
         </Menu.Item>
       </Menu>
     </Sider>

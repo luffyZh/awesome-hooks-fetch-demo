@@ -5,7 +5,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { page, pageSize } = req.query;
   const { list } = generateUserList(+page, +pageSize);
   res.status(200).json({
-    success: true,
+    code: 0,
     message: '',
     data: {
       list,

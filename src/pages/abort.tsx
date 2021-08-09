@@ -32,6 +32,7 @@ const Page = () => {
   return (
     <>
       <Alert
+        style={{ marginBottom: '10px' }}
         message="Abort 步骤"
         description="第3页后端10s返回，前端超时 5s，你可以点击第3页一直等待或者切换路由，然后 Network 查看"
         type="info"

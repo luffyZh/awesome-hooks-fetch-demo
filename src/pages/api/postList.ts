@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { generateUserList } from '../../../utils/user-data'
-import { sleep } from '../../../utils/methods';
+import { generateUserList } from '../../utils/user-data'
+import { sleep } from '../../utils/methods';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { page, pageSize } = req.query;
+  const { page, pageSize } = req.body;
   // 如果 page 为第1页，设置一个5秒的loading
   if (+page === 1) {
     await sleep(3000);

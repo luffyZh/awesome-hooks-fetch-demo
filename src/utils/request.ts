@@ -3,12 +3,12 @@ import qs from 'query-string';
 import { message } from 'antd';
 import { filterObject } from './methods';
 
-enum EHttpMethods {
-  get = 'GET',
-  post = 'POST',
-  put = 'PUT',
-  patch = 'PATCH',
-  delete = 'DELETE'
+export enum EHttpMethods {
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  PATCH = 'PATCH',
+  DELETE = 'DELETE'
 }
 
 type ICustomRequestError = {
@@ -41,17 +41,22 @@ interface IHeaderConfig {
 }
 
 export interface IResponseData {
+  code: number;
   data: any;
   message: string;
-  success: boolean;
+}
+
+interface IAnyMap { 
+  [propName: string]: any;
 }
 
 export interface IRequestOptions {
   headers?: IHeaderConfig;
-  signal?: any;
+  signal?: AbortSignal;
   method?: EHttpMethods;
-  query?: Record<string, any>;
-  data?: Record<string, any>;
+  query?: IAnyMap;
+  params?: IAnyMap;
+  data?: IAnyMap;
   body?: string;
   timeout?: number;
   credentials?: 'include' | 'same-origin';
@@ -65,20 +70,21 @@ export interface IRequestOptions {
   * @param options request options
   */
 interface IHttpInterface {
-  request<R>(url: string, options?: IRequestOptions): Promise<R>;
+  request<T>(url: string, options?: IRequestOptions): Promise<T>;
 }
 
 const CAN_SEND_METHOD = ['POST', 'PUT', 'PATCH', 'DELETE'];
 
 class Http implements IHttpInterface {
-  public request<IResponseData>(url: string, options?: IRequestOptions, abortController?: AbortController): Promise<IResponseData> {
+  public async request<T>(url: string, options?: IRequestOptions, abortController?: AbortController): Promise<T> {
     const opts: IRequestOptions = Object.assign({
+      method: 'GET',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         Accept: 'application/json'
       },
       credentials: 'include',
-      timeout: 5000,
+      timeout: 10000,
       mode: 'cors',
       cache: 'no-cache'
     }, options);
@@ -94,24 +100,27 @@ class Http implements IHttpInterface {
     const canSend = opts && opts.method && CAN_SEND_METHOD.includes(opts.method);
 
     if (canSend && opts.data) {
-      opts.body = qs.stringify(filterObject(opts.data, Boolean));
+      opts.body = JSON.stringify(filterObject(opts.data, Boolean));
       opts.headers && Reflect.set(opts.headers, 'Content-Type', 'application/json');
     }
 
     console.log('Request Opts: ', opts);
 
-    return Promise.race([
-      fetch(url, opts),
-      new Promise<any>((_, reject) => {
-        setTimeout(() => {
-          return reject({ status: 408, statusText: '请求超时，请稍后重试', url })
-        }, opts.timeout);
-      }),
-    ]).then<IResponseData>(res => res.json())
-      .catch(e => {
-        dealErrToast(e, abortController);
-        return e;
-      });
+    try {
+      const res = await Promise.race([
+        fetch(url, opts),
+        new Promise<any>((_, reject) => {
+          setTimeout(() => {
+            return reject({ status: 408, statusText: '请求超时，请稍后重试', url });
+          }, opts.timeout);
+        }),
+      ]);
+      const result: T = await res.json();
+      return result;
+    } catch (e) {
+      dealErrToast(e, abortController);
+      return e;
+    }
   }
 }
 

@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Table } from 'antd';
+import { Table, Button } from 'antd';
 import useFetchData from '../hooks/useFetchData';
 import { getUserList } from '../constants/Apis';
 
@@ -27,26 +27,35 @@ const Page = () => {
 
   const options = useMemo(() => ({ query: { page, pageSize } }), [page, pageSize]);
 
-  const { loading, data } = useFetchData(getUserList, options);
+  const { loading, data, ref } = useFetchData(getUserList, options);
   const onPageNumChange = (page: number, pageSize?: number) => {
     setPage(page);
     setPageSize(pageSize);
   }
   return (
-    <Table
-      rowKey={record => record.id}
-      loading={loading}
-      columns={columns}
-      dataSource={data?.list || []}
-      pagination={{
-        current: page,
-        pageSize,
-        pageSizeOptions: ['10', '20', '30', '40', '50'],
-        onChange: onPageNumChange,
-        total: data?.total || 0
-      }}
-      scroll={{ y: 640 }}
-    />
+    <>
+      <Button
+        style={{ marginBottom: 10 }}
+        type="primary"
+        onClick={() => ref.current.reload()}
+      >
+        通过 Ref 更新数据
+      </Button>
+      <Table
+        rowKey={record => record.id}
+        loading={loading}
+        columns={columns}
+        dataSource={data?.list || []}
+        pagination={{
+          current: page,
+          pageSize,
+          pageSizeOptions: ['10', '20', '30', '40', '50'],
+          onChange: onPageNumChange,
+          total: data?.total || 0
+        }}
+        scroll={{ y: 640 }}
+      />
+    </>
   )
 }
 

@@ -46,7 +46,6 @@ function useFetchData<T = any>(url: string, options?: IRequestOptions): IFetchRe
         throw new Error(message);
       }
       setData(data);
-      setLoading(false);
     }).catch(err => {
       setError(err);
     }).finally(() => {
